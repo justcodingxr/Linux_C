@@ -1,0 +1,20 @@
+静态库：libxxx.a
+	1.生成目标文件：gcc -c xxx.c
+	2.ar创建静态库
+	  ar -cr -o libxxx.a xxx.o
+	  -c创建 -r取代
+	  
+	  gcc -c (-o sub.o) sub.c
+	  ar -cr (-o) libsub.a sub.o
+	  gcc main.c -L. -lsub
+	  ./a.out
+动态库: libxxx.so
+	1.生成目标文件gcc -c xxx.c
+	2.生成共享库 gcc -shared -fpic -o libxx.so xx.o
+	3.gcc -o main main.c -L. -lsub
+	4.动态库放入/usr/lib或/lib
+	    mv libsub.so /usr/lib;
+	    或动态库路径加入
+		export LD_L	IBRARY_PATH=当前路径
+		查看echo $LD_L	IBRARY_PATH；或者
+		加入配置文件中，/etc/ld.so.conf.d/*.conf
