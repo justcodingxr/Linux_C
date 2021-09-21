@@ -1,0 +1,51 @@
+1.运行说明：
+ProcessTreeTest.c为测试代码
+./ProcessTree执行测试代码，启动系统调用syscall(333)，
+dmesg进入内核查看打印的进程树。
+
+
+2.task_struct结构，其中部分字段含义如下:
+	tasks：用来组织所有进程
+	pid: 进程的唯一标识
+	parent和real_parent: 指向该进程的父进程
+	children：进程的子进程链表
+	sibling：进程的兄弟链表
+	comm：进程正在运行的可执行文件名
+3.主要代码说明：
+static void printchildren(struct task_struct* task,int n){
+        struct list_head *pos;
+        struct task_struct* p;
+        int i;
+        
+        for(i=n;i>0;i--){
+                printk(KERN_CONT "  ");//KERN_CONT强制不换行，空格隔开
+        }
+        //画出分支
+         printk(KERN_CONT "|----");
+         //输出进程名和pid，并换行，显示层次
+         printk(KERN_CONT "%s(%d)\n",task->comm,task->pid);        
+      
+		//利用&task->children遍历子进程
+         list_for_each(pos,&task->children)
+         {      
+				//返回子进程的task_struct指针
+                p=list_entry(pos,struct task_struct,sibling);
+                if(p!=NULL){
+                n++;
+                //递归打印子进程
+                printchildren(p,n);
+                n--;
+                }
+         }
+
+
+
+}
+      
+asmlinkage long sys_printAllInfo(void){
+        printk("process tree:\n");
+        printk("\n======================================");   
+        printchildren(&init_task,0);//&init_task得到根进程指针
+        printk("\n======================================"); 
+              return 0;
+}
