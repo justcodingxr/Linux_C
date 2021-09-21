@@ -1,0 +1,5 @@
+myshell是一个shell解释程序，
+运行myshell可以执行包括hello.sh,99.sh（自定义shell文件命令）
+和ls,pwd,ifconfig,ps,df,dmesg等命令。
+hello.sh实现输出 hello world，
+99.sh 实现打印9*9乘法表。
